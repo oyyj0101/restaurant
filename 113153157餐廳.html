@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>幸福餐廳 - 雙語完整價目表</title>
+
+    <base href="https://www.fgu.edu.tw/">
+
+    <style>
+        /* --- 全域設定 --- */
+        body {
+            font-family: "PingFang TC", "Microsoft JhengHei", sans-serif;
+            line-height: 1.8;
+            color: #443322;
+            background-color: #fdfaf5;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            background: linear-gradient(135deg, #e67e22, #d35400);
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 { margin: 0; font-size: 2.8rem; letter-spacing: 4px; }
+
+        header pre {
+            font-family: inherit;
+            background: rgba(255, 255, 255, 0.15);
+            display: inline-block;
+            padding: 15px 25px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        /* --- 九宮格圖片區 (Grid) --- */
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 三欄 */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-grid img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover; /* 確保圖片不變形且填滿框框 */
+            border-radius: 8px;
+            transition: transform 0.3s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .photo-grid img:hover {
+            transform: scale(1.05); /* 滑鼠滑過放大效果 */
+        }
+
+        /* --- 側邊欄圖片樣式 --- */
+        .aside-img-box {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .aside-img-box img {
+            width: 100%;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+
+        .view-large {
+            display: inline-block;
+            font-size: 0.85rem;
+            color: #d35400;
+            text-decoration: none;
+            border-bottom: 1px solid #d35400;
+            padding-bottom: 2px;
+        }
+
+
+        /* --- 導覽列 --- */
+        nav {
+            background: #fff;
+            padding: 15px 0;
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav ul { list-style: none; padding: 0; margin: 0; }
+        nav li { display: inline; margin: 0 15px; }
+        nav a { text-decoration: none; color: #d35400; font-weight: bold; transition: 0.3s; }
+        nav a:hover { color: #e67e22; border-bottom: 2px solid #e67e22; }
+
+        /* --- 主內容區域 --- */
+        main {
+            max-width: 1100px;
+            margin: 40px auto;
+            display: flex;
+            gap: 30px;
+            padding: 0 20px;
+        }
+
+        article { flex: 3; }
+
+        /* --- 菜單顯示控制 --- */
+        .menu-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .menu-section.active {
+            display: block;
+            animation: fadeIn 0.6s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 側邊欄與按鈕 --- */
+        aside {
+            flex: 1.2;
+            position: sticky;
+            top: 80px;
+            height: fit-content;
+        }
+
+        .switcher-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 6px solid #e67e22;
+        }
+
+        .lang-group { margin-bottom: 20px; }
+        .lang-label { display: block; font-size: 0.85rem; color: #888; margin-bottom: 8px; font-weight: bold; }
+
+        .btn-item {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #eee;
+            background: #fafafa;
+            color: #555;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            margin-bottom: 5px;
+        }
+
+        .btn-item:hover { background: #fff5e6; border-color: #e67e22; color: #e67e22; }
+        .btn-item.active { background: #e67e22; color: white; border-color: #e67e22; box-shadow: 0 3px 8px rgba(230, 126, 34, 0.3); }
+
+        /* --- 菜單內容細節 --- */
+        h3 { color: #8e44ad; border-bottom: 2px solid #f1c40f; padding-bottom: 8px; }
+        .dish-header { display: flex; justify-content: space-between; align-items: baseline; }
+        .dish-name { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+        .price { color: #c0392b; font-weight: bold; font-size: 1.1rem; }
+        .ingredients-note { display: block; font-size: 0.9rem; color: #7f8c8d; margin-top: 5px; border-left: 3px solid #f1c40f; padding-left: 10px; margin-bottom: 20px; }
+
+        /* 英文菜單專用樣式 */
+        .en-item { margin-bottom: 25px; }
+        mark { background-color: #fff3cd; padding: 0 3px; }
+
+        footer { background: #34495e; color: white; text-align: center; padding: 40px 20px; margin-top: 60px; }
+
+        @media (max-width: 850px) {
+            main { flex-direction: column-reverse; }
+            aside { position: static; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>幸福餐廳</h1>
+        <pre>
+歡迎來到幸福餐廳
+                        這裡提供溫暖美味的料理
+        </pre>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="">佛光大學校網</a></li>
+            <li><a href="https://www.fgu.edu.tw/" target="_blank">新分頁校網</a></li>
+            <li><a href="https://www.ai.fgu.edu.tw/">資工系網</a></li>
+            <li><a href="https://tech.fgu.edu.tw/">科技學院</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <article>
+            <h2>餐廳介紹</h2>
+            <p>幸福餐廳堅持提供最優質的食材，讓每一口都充滿幸福。您可以透過右側選擇語言查看完整價目與成分。</p>
+
+            <section id="section-zh" class="menu-section active">
+                <h3>中文菜單 (Chinese Menu)</h3>
+                <div class="menu-container">
+                    <div>
+                        <div class="dish-header"><span class="dish-name">奶油培根義大利麵</span> <span class="price">NT$220</span></div>
+                        <span class="ingredients-note">成分：鮮奶油、培根、帕馬森起司、洋蔥、杜蘭小麥麵</span>
+                    </div>
+                    <div>
+                        <div class="dish-header"><span class="dish-name">香煎雞腿排</span> <span class="price">NT$260</span></div>
+                        <span class="ingredients-note">成分：土雞腿肉、義大利香料、大蒜、冷壓橄欖油</span>
+                    </div>
+                    <div>
+                        <div class="dish-header"><span class="dish-name">番茄海鮮燉飯</span> <span class="price">NT$280</span></div>
+                        <span class="ingredients-note">成分：新鮮番茄糊、草蝦、透抽、蛤蜊、義大利米</span>
+                    </div>
+                    <div>
+                        <div class="dish-header"><span class="dish-name">草莓蛋糕</span> <span class="price">NT$150</span></div>
+                        <span class="ingredients-note">成分：大湖草莓、日本麵粉、法國鮮奶油、手作果醬</span>
+                    </div>
+                    <div>
+                        <div class="dish-header"><span class="dish-name">拿鐵咖啡</span> <span class="price">NT$120</span></div>
+                        <span class="ingredients-note">成分：阿拉比卡咖啡豆、全脂鮮乳、細緻奶泡</span>
+                    </div>
+                </div>
+            </section>
+            <article style="margin-bottom: 40px;">
+                <h3>幸福角落 - 美味圖輯</h3>
+                <div class="photo-grid">
+                    <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=400&q=80" alt="菜色1">
+                    <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=400&q=80" alt="菜色2">
+                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=400&q=80" alt="菜色3">
+                    <img src="https://images.unsplash.com/photo-1493770348161-369560ae357d?auto=format&fit=crop&w=400&q=80" alt="菜色4">
+                    <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=400&q=80" alt="環境1">
+                    <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=400&q=80" alt="菜色5">
+                    <img src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=400&q=80" alt="甜點1">
+                    <img src="https://images.unsplash.com/photo-1499028344343-cd173ffc68a9?auto=format&fit=crop&w=400&q=80" alt="菜色6">
+                    <img src="https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?auto=format&fit=crop&w=400&q=80" alt="菜色7">
+                </div>
+            </article>
+
+            <section id="section-en" class="menu-section">
+                <h3>English Menu (with Price)</h3>
+                <div class="menu-container">
+                    <div class="en-item">
+                        <div class="dish-header"><span class="dish-name">Creamy Bacon Pasta <sub>+</sub></span> <span class="price">NT$220</span></div>
+                        <span class="ingredients-note">Ingredients: <mark>Pasta</mark>, <u>Cheese</u>, <b>Bacon</b>, <del>Mushroom</del> (Unavailable)</span>
+                    </div>
+                    <div class="en-item">
+                        <div class="dish-header"><span class="dish-name">Grilled Chicken Steak <sub>+</sub></span> <span class="price">NT$260</span></div>
+                        <span class="ingredients-note">Ingredients: Chicken, Garlic, <mark>Olive Oil</mark>, <u>Rosemary</u></span>
+                    </div>
+                    <div class="en-item">
+                        <div class="dish-header"><span class="dish-name">Seafood Risotto <sub>+</sub></span> <span class="price">NT$280</span></div>
+                        <span class="ingredients-note">Ingredients: Tomato Sauce, Shrimp, Squid, Clams, Risotto Rice</span>
+                    </div>
+                    <div class="en-item">
+                        <div class="dish-header"><span class="dish-name">Strawberry Cake <sup>*</sup></span> <span class="price">NT$150</span></div>
+                        <span class="ingredients-note">Ingredients: Strawberry, Cream, <mark>Sugar</mark>, Sponge Cake</span>
+                    </div>
+                    <div class="en-item">
+                        <div class="dish-header"><span class="dish-name">Caffè Latte <sup>*</sup></span> <span class="price">NT$120</span></div>
+                        <span class="ingredients-note">Ingredients: Espresso, <del>Milk</del> (Soy milk replacement available)</span>
+                    </div>
+                </div>
+                <p style="font-size:0.8rem; color:#999; margin-top:20px; padding:10px; background:#f9f9f9; border-radius:5px;">
+                    * Dessert/Drink Category | + Main Course Category
+                </p>
+            </section>
+        </article>
+
+        <aside>
+            <div class="switcher-card">
+                <h3>瀏覽菜單 / Navigation</h3>
+                
+                <div class="lang-group">
+                    <span class="lang-label">切換顯示 (Switch Language)</span>
+                    <button class="btn-item active" id="btn-zh" onclick="toggleMenu('zh')">🀄 中文菜單選項</button>
+                    <button class="btn-item" id="btn-en" onclick="toggleMenu('en')">🔤 English Menu Options</button>
+                </div>
+                <h3>店內實景</h3>
+                <div class="aside-img-box">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=300&q=80" alt="餐廳外部">
+                    <a href="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80" target="_blank" class="view-large">查看餐廳外部大圖</a>
+                </div>
+
+                <div class="aside-img-box">
+                    <img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=300&q=80" alt="餐廳內部">
+                    <a href="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=1200&q=80" target="_blank" class="view-large">查看餐廳內部大圖</a>
+                </div>
+
+                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
+                
+                <div style="background: #fff5e6; padding: 15px; border-radius: 10px; border: 1px solid #ffeaa7;">
+                    <strong style="color: #d35400;">今日推薦 Today's Special</strong>
+                    <p style="font-size: 0.85rem; margin: 5px 0;">香煎雞腿排 (NT$260)<br>點擊上方語言切換可看詳細成分！</p>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <footer>
+        <address>
+            <strong>幸福餐廳 Happy Restaurant</strong><br>
+            台北市美味路100號 | 02-1234-5678
+        </address>
+        <p>© 2026 Happy Restaurant</p>
+    </footer>
+
+    <script>
+        function toggleMenu(lang) {
+            const secZh = document.getElementById('section-zh');
+            const secEn = document.getElementById('section-en');
+            const btnZh = document.getElementById('btn-zh');
+            const btnEn = document.getElementById('btn-en');
+
+            if (lang === 'zh') {
+                secZh.classList.add('active');
+                secEn.classList.remove('active');
+                btnZh.classList.add('active');
+                btnEn.classList.remove('active');
+            } else {
+                secZh.classList.remove('active');
+                secEn.classList.add('active');
+                btnZh.classList.remove('active');
+                btnEn.classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>
